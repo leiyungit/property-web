@@ -63,7 +63,7 @@
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
-            <a-input v-model.number="form.housecount" disabled/>
+            <a-input v-model.number="form.buildingNumber" disabled/>
           </a-form-model-item>
         </a-col>
         <a-col :span="12">
@@ -123,7 +123,7 @@ export default {
                 code: '',
                 affiliates: '',
                 housename: '',
-                housecount: ''
+                buildingNumber: ''
             }
         }
     }

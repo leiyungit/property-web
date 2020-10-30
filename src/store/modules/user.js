@@ -55,7 +55,7 @@ const user = {
                 getInfo()
                     .then(response => {
                         const result = response.result
-
+                        console.log(result)
                         if (result.role && result.role.permissions.length > 0) {
                             const role = result.role
                             role.permissions = result.role.permissions
@@ -73,15 +73,16 @@ const user = {
                             commit('SET_ROLES', result.role)
                             commit('SET_INFO', result)
                         } else {
+                            console.log('getInfo: roles must be a non-null array ! ')
                             reject(new Error('getInfo: roles must be a non-null array !'))
                         }
 
                         commit('SET_NAME', { name: result.name, welcome: welcome() })
                         commit('SET_AVATAR', result.avatar)
-
                         resolve(response)
                     })
                     .catch(error => {
+                        console.log(error)
                         reject(error)
                     })
             })
