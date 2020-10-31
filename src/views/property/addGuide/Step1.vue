@@ -9,11 +9,12 @@
             prop="company"
             :wrapperCol="wrapperCol"
           >
-            <a-select>
+            <a-select v-model="form.company">
               <a-select-option
-                  v-for="(item, index) in this.form.company"
-                  :key="index"
-                  :value="item.id" >{{ item.companyFullName }}</a-select-option>
+                v-for="(item, index) in select"
+                :key="index"
+                :value="item.id"
+              >{{ item.companyFullName }}</a-select-option>
             </a-select>
           </a-form-model-item>
         </a-col>
@@ -44,7 +45,7 @@
       <a-row>
         <a-col :span="12">
           <a-form-model-item label="占地面积(平房米)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input  v-model="form.coverArea" />
+            <a-input v-model="form.coverArea" />
           </a-form-model-item>
         </a-col>
         <a-col :span="12">
@@ -56,7 +57,7 @@
       <a-row>
         <a-col :span="12">
           <a-form-model-item label="绿地面积(平房米)" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input v-model="form.greenArea"/>
+            <a-input v-model="form.greenArea" />
           </a-form-model-item>
         </a-col>
         <a-col :span="12">
@@ -132,117 +133,121 @@ import { selectCompany, insertEstate } from '@/api/estate'
 const QS = require('qs')
 
 export default {
-    name: 'Step1',
-    data() {
-        return {
-            labelCol: { lg: { span: 6 }, sm: { span: 4 } },
-            wrapperCol: { lg: { span: 16 }, sm: { span: 20 } },
-            form: {
-                company: [],
-                estateCode: '',
-                estateName: '',
-                coverArea: '',
-                buildArea: '',
-                greenArea: '',
-                roadArea: '',
-                buildingNumber: '',
-                buildingLeader: '',
-                estateAddr: '',
-                companyName: '',
-                companyBehalf: '',
-                contact: '',
-                contactPhone: '',
-                remark: ''
-
-            },
-            rules: {
-                estateCode: [
-                    { required: true, message: '住宅编码必须填写', trigger: 'blur' }
-                    // { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
-                ],
-                company: [{ required: true, message: '所属公司必须填写', trigger: 'change' }],
-                estateName: [{ required: true, message: '楼宇名称必须填写', trigger: 'blur' }],
-                buildingNumber: [
-                    {
-                        required: true,
-                        message: '楼宇数量必须填写',
-                        trigger: 'change'
-                    },
-                    { min: 1, max: 20, type: 'number', message: 'Length should be 1 to 20', trigger: 'change' }
-                ]
-            }
-        }
-    },
-    created() {
-        selectCompany().then(res => {
-            console.log(res)
-            this.form.company = res.result
-        }).catch(err => {
-            console.log(err)
-            this.$notification['error']({
+  name: 'Step1',
+  data() {
+    return {
+      select: [],
+      labelCol: { lg: { span: 6 }, sm: { span: 4 } },
+      wrapperCol: { lg: { span: 16 }, sm: { span: 20 } },
+      form: {
+        company: [],
+        estateCode: '',
+        estateName: '',
+        coverArea: '',
+        buildArea: '',
+        greenArea: '',
+        roadArea: '',
+        buildingNumber: '',
+        buildingLeader: '',
+        estateAddr: '',
+        companyName: '',
+        companyBehalf: '',
+        contact: '',
+        contactPhone: '',
+        remark: ''
+      },
+      rules: {
+        estateCode: [
+          { required: true, message: '住宅编码必须填写', trigger: 'blur' }
+          // { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
+        ],
+        company: [{ required: true, message: '所属公司必须填写', trigger: 'change' }],
+        estateName: [{ required: true, message: '楼宇名称必须填写', trigger: 'blur' }],
+        buildingNumber: [
+          {
+            required: true,
+            message: '楼宇数量必须填写',
+            trigger: 'change'
+          },
+          { min: 1, max: 20, type: 'number', message: 'Length should be 1 to 20', trigger: 'change' }
+        ]
+      }
+    }
+  },
+  created() {
+    selectCompany()
+      .then(res => {
+        console.log(res)
+        this.select = res.result
+      })
+      .catch(err => {
+        console.log(err)
+        this.$notification['error']({
+          message: '错误',
+          description: err.toString(),
+          duration: 1
+        })
+      })
+  },
+  methods: {
+    nextStep() {
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          console.log(this.form.company)
+          // this.$emit('nextStep')
+          const data = QS.stringify(this.form)
+          console.log(data)
+          insertEstate(data)
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              this.$notification['error']({
                 message: '错误',
                 description: err.toString(),
                 duration: 1
+              })
             })
-        })
-    },
-    methods: {
-        nextStep() {
-            this.$refs.ruleForm.validate(valid => {
-                if (valid) {
-                    // this.$emit('nextStep')
-                    const data = QS.stringify(this.form)
-                    console.log(data)
-                    insertEstate(data)
-                        .then(res => {
-                        console.log(res)
-                    }).catch(err => {
-                        this.$notification['error']({
-                            message: '错误',
-                            description: err.toString(),
-                            duration: 1
-                        })
-                    })
-                } else {
-                    console.log('error submit!!')
-                    return false
-                }
-            })
-        },
-        resetForm() {
-            this.$refs.ruleForm.resetFields()
-            console.log(this.$refs.ruleForm.resetFields)
+        } else {
+          console.log('error submit!!')
+          return false
         }
+      })
+    },
+    resetForm() {
+      this.$refs.ruleForm.resetFields()
+      console.log(this.$refs.ruleForm.resetFields)
     }
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .step-form-style-desc {
-    padding: 0 56px;
+  padding: 0 56px;
+  color: rgba(0, 0, 0, 0.45);
+
+  h3 {
+    margin: 0 0 12px;
     color: rgba(0, 0, 0, 0.45);
+    font-size: 16px;
+    line-height: 32px;
+  }
 
-    h3 {
-        margin: 0 0 12px;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 16px;
-        line-height: 32px;
-    }
+  h4 {
+    margin: 0 0 4px;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 14px;
+    line-height: 22px;
+  }
 
-    h4 {
-        margin: 0 0 4px;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 14px;
-        line-height: 22px;
-    }
-
-    p {
-        margin-top: 0;
-        margin-bottom: 12px;
-        line-height: 22px;
-    }
+  p {
+    margin-top: 0;
+    margin-bottom: 12px;
+    line-height: 22px;
+  }
 }
 .ant-form-item {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 </style>
