@@ -193,7 +193,7 @@ export default {
     nextStep() {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          console.log(this.form.company)
+          console.log('company:' + this.form.company)
           // this.$emit('nextStep')
           const data = QS.stringify(this.form)
           console.log(data)
