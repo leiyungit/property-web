@@ -194,12 +194,29 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           console.log('company:' + this.form.company)
-          // this.$emit('nextStep')
           const data = QS.stringify(this.form)
           console.log(data)
           insertEstate(data)
             .then(res => {
               console.log(res)
+              if (res.result === 1) {
+                setTimeout(() => {
+                  this.$notification.success({
+                    message: '成功',
+                    description: res.message
+                  })
+                }, 1000)
+                this.$store.commit('SET_TITLE', {
+                  estateCode: this.form.estateCode,
+                  buildingNumber: this.form.buildingNumber
+                })
+                this.$emit('nextStep')
+              } else {
+                this.$notification.error({
+                  message: '失败',
+                  description: res.message
+                })
+              }
             })
             .catch(err => {
               this.$notification['error']({
