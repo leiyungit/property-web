@@ -174,7 +174,7 @@ export default {
             data,
             columns,
             editingKey: '',
-            dateFormat: ['DD/MM/YYYY']
+            dateFormat: ['YYYY-MM-DD']
             // labelCol: { lg: { span: 5 }, sm: { span: 5 } },
             // wrapperCol: { lg: { span: 19 }, sm: { span: 19 } },
             // form: this.$form.createForm(this),
@@ -217,6 +217,7 @@ export default {
         nextStep() {
             // console.log(data)
             // console.log(JSON.stringify(this.data))
+            JSON.stringify(this.data)
             const newData = this.data
             for (let index = 0; index < newData.length; index++) {
                 const element = newData[index]
@@ -313,14 +314,14 @@ export default {
             console.log(this.form2.chOverRoofDate)
             if (!this.form2.chOverRoofDate) return false
             for (let i = 0; i < data.length; i++) {
-                data[i].overRoofDate = this.form2.chOverRoofDate.format('YYYY/MM/DD')
+                data[i].overRoofDate = this.form2.chOverRoofDate.format('YYYY-MM-DD')
             }
         },
         changeFinishDate() {
             console.log(this.form2.chFinishDate)
             if (!this.form2.chFinishDate) return false
             for (let i = 0; i < data.length; i++) {
-                data[i].finishDate = this.form2.chFinishDate.format('YYYY/MM/DD')
+                data[i].finishDate = this.form2.chFinishDate.format('YYYY-MM-DD')
             }
         }
     },
