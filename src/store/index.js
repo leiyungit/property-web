@@ -11,6 +11,7 @@ import permission from './modules/permission'
 // import permission from './modules/async-router'
 import getters from './getters'
 import oneStep from './modules/oneStep'
+import twoStep from './modules/twoStep'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ export default new Vuex.Store({
     app,
     user,
     permission,
-    oneStep
+    oneStep,
+    twoStep
   },
   state: {
 

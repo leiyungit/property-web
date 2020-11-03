@@ -20,13 +20,13 @@
       <a-table :columns="columns" :dataSource="data" bordered align="center">
         <template
           v-for="col in [
-            'housecode',
-            'unitcode',
-            'unitname',
-            'startfloor',
-            'endfloor',
-            'startroomnum',
-            'endroomnum',
+            'buildingCode',
+            'unitCode',
+            'unitName',
+            'startFloor',
+            'stopFloor',
+            'startCellId',
+            'stopCellId',
             'remark'
           ]"
           :slot="col"
@@ -57,6 +57,7 @@
         </template>
       </a-table>
       <a-row>
+        <a-button type="primary" @click="prevStep()">上一步</a-button>
         <a-button type="primary" @click="nextStep()">下一步</a-button>
       </a-row>
     </a-row>
@@ -64,56 +65,58 @@
 </template>
 
 <script>
+import { selectUnit } from '@/api/estate'
+
 const columns = [
     {
         // 楼宇编码	单元编码	单元名称	开始楼层	结束楼层	开始房号	结束房号
         align: 'center',
         title: '楼宇编码',
-        dataIndex: 'housecode',
+        dataIndex: 'buildingCode',
         width: '6%',
-        scopedSlots: { customRender: 'housecode' }
+        scopedSlots: { customRender: 'buildingCode' }
     },
     {
         align: 'center',
         title: '单元编码',
-        dataIndex: 'unitcode',
+        dataIndex: 'unitCode',
         width: '6%',
-        scopedSlots: { customRender: 'unitcode' }
+        scopedSlots: { customRender: 'unitCode' }
     },
     {
         align: 'center',
         title: '单元名称',
-        dataIndex: 'unitname',
+        dataIndex: 'unitName',
         width: '6%',
-        scopedSlots: { customRender: 'unitname' }
+        scopedSlots: { customRender: 'unitName' }
     },
     {
         align: 'center',
         title: '开始楼层',
-        dataIndex: 'startfloor',
+        dataIndex: 'startFloor',
         width: '7%',
-        scopedSlots: { customRender: 'startfloor' }
+        scopedSlots: { customRender: 'startFloor' }
     },
     {
         align: 'center',
         title: '结束楼层',
-        dataIndex: 'endfloor',
+        dataIndex: 'stopFloor',
         width: '7%',
-        scopedSlots: { customRender: 'endfloor' }
+        scopedSlots: { customRender: 'stopFloor' }
     },
     {
         align: 'center',
         title: '开始房号',
-        dataIndex: 'startroomnum',
+        dataIndex: 'startCellId',
         width: '7%',
-        scopedSlots: { customRender: 'startroomnum' }
+        scopedSlots: { customRender: 'startCellId' }
     },
     {
         align: 'center',
         title: '结束房号',
-        dataIndex: 'endroomnum',
+        dataIndex: 'stopCellId',
         width: '7%',
-        scopedSlots: { customRender: 'endroomnum' }
+        scopedSlots: { customRender: 'stopCellId' }
     },
     {
         align: 'center',
@@ -132,19 +135,7 @@ const columns = [
 ]
 
 const data = []
-for (let i = 0; i < 10; i++) {
-    data.push({
-        key: i.toString(),
-        housecode: `B-${i + 1}`,
-        unitcode: `U-${i + 1}`,
-        unitname: `${i + 1}单元`,
-        startfloor: 1,
-        endfloor: 8,
-        startroomnum: 1,
-        endroomnum: 2,
-        remark: ''
-    })
-}
+
 export default {
     name: 'Step3',
     data() {
@@ -166,12 +157,39 @@ export default {
             editingKey: ''
         }
     },
+    created() {
+        const param = this.$store.state.twoStep.buildingCodeCount
+        console.log(param)
+        // console.log(JSON.parse(param))
+        selectUnit(param).then(res => {
+            console.log(res)
+            for (let i = 0; i < res.result.length; i++) {
+                const m = res.result[i]
+                data.push({
+                    key: m.id,
+                    buildingCode: m.buildingCode,
+                    unitCode: m.unitCode,
+                    unitName: m.unitName,
+                    startFloor: m.startfloor,
+                    stopFloor: m.stopFloor,
+                    startCellId: m.startCellId,
+                    stopCellId: m.stopCellId,
+                    remark: m.remark
+                })
+            }
+        }).catch(err => {
+            setTimeout(this.$notification.error({
+                message: '异常',
+                description: err.message
+            }), 1000)
+        })
+    },
     methods: {
         nextStep() {
             this.$emit('nextStep')
         },
         prevStep() {
-            // this.$emit('prevStep')
+             this.$emit('prevStep')
         },
         handleChange(value, key, column) {
             const newData = [...this.data]

@@ -210,7 +210,10 @@ export default {
             }
             this.cacheData = data.map(item => ({ ...item }))
         }).catch(err => {
-            console.log(err)
+            setTimeout(this.$notification.error({
+                message: '异常',
+                description: err.message
+            }), 1000)
         })
     },
     methods: {
@@ -219,11 +222,22 @@ export default {
             // console.log(JSON.stringify(this.data))
             JSON.stringify(this.data)
             const newData = this.data
+            const params = []
             for (let index = 0; index < newData.length; index++) {
                 const element = newData[index]
                 element.id = element.key
                 element.estateCode = this.$store.state.oneStep.estateCode
+
+                const param = {
+                    buildingCode: element.buildingCode,
+                    unitCount: element.unitCount
+                }
+                params.push(param)
             }
+            console.log(JSON.stringify(params))
+            this.$store.commit('SET_TITLE', {
+                buildingCodeCount: JSON.stringify(params)
+            })
              console.log(newData)
             updateBatchBuilding(newData)
                 .then(res => {

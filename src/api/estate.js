@@ -51,3 +51,14 @@ export function updateBatchBuilding(parameter) {
         // })
     })
 }
+
+export function selectUnit(parameter) {
+    return axios({
+        url: '/estate/selectUnit',
+        method: 'post',
+        data: parameter,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
