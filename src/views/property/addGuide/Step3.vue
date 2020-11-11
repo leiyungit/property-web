@@ -3,16 +3,21 @@
     <!-- <a-form-model ref="ruleForm" :model="form2" :label-col="labelCol" :wrapper-col="wrapperCol"> -->
     <a-row class="header">
       楼层数量:
-      <a-input style="width: 30px;padding: 0;text-align: center;"></a-input>开始房号:
+      <a-input v-model="form2.floorNumber" @change="changeFloor" style="width: 30px;padding: 0;text-align: center;"></a-input>开始房号:
       <!-- <a-form-model-item label="单元数量：" prop="region" class="units" :labelCol="labelCol" :wrapperCol="wrapperCol"> -->
-      <a-select v-model="form2.region">
+      <a-select v-model="form2.startCellId" @change="changeStartCell">
         <a-select-option value="1">1</a-select-option>
         <a-select-option value="2">2</a-select-option>
+        <a-select-option value="3">3</a-select-option>
+        <a-select-option value="4">4</a-select-option>
       </a-select>结束房号:
       <!-- <a-form-model-item label="单元数量：" prop="region" class="units" :labelCol="labelCol" :wrapperCol="wrapperCol"> -->
-      <a-select v-model="form2.region">
+      <a-select v-model="form2.stopCellId" @change="changeStopCell">
         <a-select-option value="1">1</a-select-option>
         <a-select-option value="2">2</a-select-option>
+        <a-select-option value="3">3</a-select-option>
+        <a-select-option value="4">4</a-select-option>
+        <a-select-option value="5">5</a-select-option>
       </a-select>
       <!-- </a-form-model-item> -->
     </a-row>
@@ -57,7 +62,7 @@
         </template>
       </a-table>
       <a-row>
-        <a-button type="primary" @click="prevStep()">上一步</a-button>
+        <a-button type="primary" @click="prevStep()">上一步</a-button>&nbsp;
         <a-button type="primary" @click="nextStep()">下一步</a-button>
       </a-row>
     </a-row>
@@ -139,13 +144,15 @@ const data = []
 export default {
     name: 'Step3',
     data() {
-        this.cacheData = data.map(item => ({ ...item }))
         return {
             labelCol: { span: 2 },
             wrapperCol: { span: 1 },
             form2: {
                 name: '',
                 region: undefined,
+                floorNumber: '',
+                startCellId: '',
+                stopCellId: '',
                 date1: undefined,
                 delivery: false,
                 type: [],
@@ -177,6 +184,7 @@ export default {
                     remark: m.remark
                 })
             }
+            this.cacheData = data.map(item => ({ ...item }))
         }).catch(err => {
             setTimeout(this.$notification.error({
                 message: '异常',
@@ -190,6 +198,25 @@ export default {
         },
         prevStep() {
              this.$emit('prevStep')
+        },
+        changeFloor() {
+            console.log(this.form2.floorNumber)
+            for (let i = 0; i < this.data.length; i++) {
+                this.data[i].startFloor = 1
+                this.data[i].stopFloor = this.form2.floorNumber
+            }
+        },
+        changeStartCell() {
+            console.log(this.form2.startCellId)
+            for (let i = 0; i < this.data.length; i++) {
+                this.data[i].startCellId = this.form2.startCellId
+            }
+        },
+        changeStopCell() {
+            console.log(this.form2.stopCellId)
+            for (let i = 0; i < this.data.length; i++) {
+                this.data[i].stopCellId = this.form2.stopCellId
+            }
         },
         handleChange(value, key, column) {
             const newData = [...this.data]

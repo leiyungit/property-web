@@ -220,7 +220,6 @@ export default {
         nextStep() {
             // console.log(data)
             // console.log(JSON.stringify(this.data))
-            JSON.stringify(this.data)
             const newData = this.data
             const params = []
             for (let index = 0; index < newData.length; index++) {
