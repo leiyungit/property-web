@@ -10,23 +10,25 @@
 </template>
 
 <script>
+import { findEstate } from '@/api/estate'
+
 const columns = [
     {
         title: '所属公司',
-        dataIndex: 'affiliates',
-        scopedSlots: { customRender: 'affiliates' }
+        dataIndex: 'company',
+        scopedSlots: { customRender: 'company' }
     },
     {
         title: '住宅编码',
-        dataIndex: 'homecode'
+        dataIndex: 'estateCode'
     },
     {
         title: '住宅名称',
-        dataIndex: 'homename'
+        dataIndex: 'estateName'
     },
     {
         title: '地址',
-        dataIndex: 'address'
+        dataIndex: 'estateAddr'
     },
     {
         align: 'center',
@@ -35,36 +37,7 @@ const columns = [
         scopedSlots: { customRender: 'operation' }
     }
 ]
-const data = [
-    {
-        key: '1',
-        affiliates: 'John Brown',
-        homecode: 32,
-        homename: 'New York No. 1 Lake Park',
-        address: '123123'
-    },
-    {
-        key: '2',
-        affiliates: 'John Brown',
-        homecode: 32,
-        homename: 'New York No. 2 Lake Park',
-        address: '123123'
-    },
-    {
-        key: '3',
-        affiliates: 'John Brown',
-        homecode: 32,
-        homename: 'New York No. 3 Lake Park',
-        address: '123123'
-    },
-    {
-        key: '4',
-        affiliates: 'John Brown',
-        homecode: 32,
-        homename: 'New York No. 4 Lake Park',
-        address: '123123'
-    }
-]
+const data = []
 
 export default {
     name: 'Houseinformation',
@@ -95,11 +68,26 @@ export default {
             }
         }
     },
+    created() {
+        findEstate().then(res => {
+            console.log(res)
+            for (let index = 0; index < res.result.length; index++) {
+                const m = res.result[index]
+                data.push({
+                    key: m.id,
+                    company: m.company,
+                    estateCode: m.estateCode,
+                    estateName: m.estateName,
+                    estateAddr: m.estateAddr
+                })
+            }
+        })
+    },
     methods: {
         seemqintain(text, record) {
             this.activeKey.defaultKey = '2'
             console.log(text, record)
-            this.$emit('set-houseinformation', record.homename)
+            this.$emit('set-houseinformation', record.estateName)
         }
     }
 }

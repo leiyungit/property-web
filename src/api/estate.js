@@ -19,6 +19,13 @@ export function insertEstate(parameter) {
     })
 }
 
+export function findEstate() {
+    return axios({
+        url: '/estate/findEstate',
+        method: 'get'
+    })
+}
+
 export function selectBuilding(parameter) {
     return axios({
         url: '/estate/selectBuilding',
