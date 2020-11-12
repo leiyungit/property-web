@@ -12,6 +12,7 @@ import permission from './modules/permission'
 import getters from './getters'
 import oneStep from './modules/oneStep'
 import twoStep from './modules/twoStep'
+import threeStep from './modules/threeStep'
 
 Vue.use(Vuex)
 
@@ -21,7 +22,8 @@ export default new Vuex.Store({
     user,
     permission,
     oneStep,
-    twoStep
+    twoStep,
+    threeStep
   },
   state: {
 

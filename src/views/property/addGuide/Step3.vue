@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { selectUnit } from '@/api/estate'
+import { selectUnit, updateBatchUnit, updateUnit } from '@/api/estate'
 
 const columns = [
     {
@@ -194,7 +194,37 @@ export default {
     },
     methods: {
         nextStep() {
-            this.$emit('nextStep')
+            //
+            const newData = this.data
+            const params = []
+            for (let index = 0; index < newData.length; index++) {
+                newData[index].id = newData[index].key
+                const param = {
+                    unitCode: newData[index].unitCode,
+                    startFloor: newData[index].startFloor,
+                    stopFloor: newData[index].stopFloor,
+                    startCellId: newData[index].startCellId,
+                    stopCellId: newData[index].stopCellId
+                }
+                params.push(param)
+            }
+            this.$store.commit('SET_TITLE', {
+                cellMessage: params
+            })
+            console.log(newData)
+            updateBatchUnit(newData).then(res => {
+                console.log(res)
+                this.$notification.success({
+                    message: '成功',
+                    description: ''
+                })
+                this.$emit('nextStep')
+            }).catch(err => {
+                setTimeout(this.$notification.error({
+                    message: '异常',
+                    description: err.message
+                }), 1000)
+            })
         },
         prevStep() {
              this.$emit('prevStep')
@@ -248,6 +278,27 @@ export default {
                 this.cacheData = newCacheData
                 this.editingKey = ''
             }
+            // key值赋值给id
+            target.id = target.key
+            console.log(target)
+            updateUnit(target).then(res => {
+                if (res.result === 1) {
+                    this.$notification.success({
+                        message: '成功',
+                        description: '' // res.message
+                    })
+                } else {
+                    this.$notification.error({
+                        message: '失败',
+                        description: res.message
+                    })
+                }
+            }).catch(err => {
+                setTimeout(this.$notification.error({
+                    message: '异常',
+                    description: err.message
+                }), 1000)
+            })
         },
         cancel(key) {
             const newData = [...this.data]

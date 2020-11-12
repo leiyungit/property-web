@@ -20,10 +20,11 @@
       <a-table :columns="columns" :dataSource="data" bordered align="center">
         <template
           v-for="col in [
-            'floornumber',
-            'housecode',
-            'constructionarea',
-            'usagearea',
+            'floorNumber',
+            'cellCode',
+            'cellName',
+            'cellBuildArea',
+            'cellUsedArea',
             'remark'
           ]"
           :slot="col"
@@ -61,34 +62,43 @@
 </template>
 
 <script>
+import { selectCell, updateCell } from '@/api/estate'
+
 const columns = [
     {
         align: 'center',
         title: '楼层数',
-        dataIndex: 'floornumber',
+        dataIndex: 'floorNumber',
         width: '6%',
-        scopedSlots: { customRender: 'floornumber' }
+        scopedSlots: { customRender: 'floorNumber' }
     },
     {
         align: 'center',
         title: '房间编码',
-        dataIndex: 'housecode',
+        dataIndex: 'cellCode',
         width: '6%',
-        scopedSlots: { customRender: 'housecode' }
+        scopedSlots: { customRender: 'cellCode' }
+    },
+    {
+        align: 'center',
+        title: '房间名称',
+        dataIndex: 'cellName',
+        width: '6%',
+        scopedSlots: { customRender: 'cellName' }
     },
     {
         align: 'center',
         title: '建筑面积',
-        dataIndex: 'constructionarea',
+        dataIndex: 'cellBuildArea',
         width: '6%',
-        scopedSlots: { customRender: 'constructionarea' }
+        scopedSlots: { customRender: 'cellBuildArea' }
     },
     {
         align: 'center',
         title: '使用面积',
-        dataIndex: 'usagearea',
+        dataIndex: 'cellUsedArea',
         width: '7%',
-        scopedSlots: { customRender: 'usagearea' }
+        scopedSlots: { customRender: 'cellUsedArea' }
     },
     {
         align: 'center',
@@ -107,20 +117,10 @@ const columns = [
 ]
 
 const data = []
-for (let i = 0; i < 10; i++) {
-    data.push({
-        key: i.toString(),
-        floornumber: `B-${i + 1}`,
-        housecode: `U-${i + 1}`,
-        constructionarea: `${i + 1}单元`,
-        usagearea: 1,
-        remark: ''
-    })
-}
+
 export default {
     name: 'Step4',
     data() {
-        this.cacheData = data.map(item => ({ ...item }))
         return {
             labelCol: { span: 2 },
             wrapperCol: { span: 1 },
@@ -138,10 +138,57 @@ export default {
             editingKey: ''
         }
     },
+    created() {
+        const params = this.$store.state.threeStep.cellMessage
+        // console.log(params)
+        selectCell(params).then(res => {
+            // console.log(res)
+            for (let i = 0; i < res.result.length; i++) {
+                const m = res.result[i]
+                data.push({
+                    key: m.id,
+                    floorNumber: m.floorNumber,
+                    cellCode: m.cellCode,
+                    cellName: m.cellName,
+                    cellBuildArea: m.cellBuildArea,
+                    cellUsedArea: m.cellUsedArea,
+                    remark: ''
+                })
+            }
+            console.log(data)
+            this.cacheData = data.map(item => ({ ...item }))
+        }).catch(err => {
+            setTimeout(this.$notification.error({
+                message: '异常',
+                description: err.message
+            }), 1000)
+        })
+    },
     methods: {
         nextStep() {
-            this.$emit('nextStep')
-            console.log(33)
+            const newData = this.data
+            for (let index = 0; index < newData.length; index++) {
+                newData[index].id = newData[index].key
+            }
+            updateCell(newData).then(res => {
+                if (res.result === 1) {
+                    this.$notification.success({
+                        message: '成功'
+                        // description: '' // res.message
+                    })
+                    this.$emit('nextStep')
+                } else {
+                    this.$notification.error({
+                        message: '失败'
+                        // description: res.message
+                    })
+                }
+            }).catch(err => {
+                setTimeout(this.$notification.error({
+                    message: '异常',
+                    description: err.message
+                }), 1000)
+            })
         },
         prevStep() {
             // this.$emit('prevStep')
@@ -176,6 +223,25 @@ export default {
                 this.cacheData = newCacheData
                 this.editingKey = ''
             }
+            target.id = target.key
+            updateCell(target).then(res => {
+                if (res.result === 1) {
+                    this.$notification.success({
+                        message: '成功'
+                        // description: '' // res.message
+                    })
+                } else {
+                    this.$notification.error({
+                        message: '失败'
+                        // description: res.message
+                    })
+                }
+            }).catch(err => {
+                setTimeout(this.$notification.error({
+                    message: '异常',
+                    description: err.message
+                }), 1000)
+            })
         },
         cancel(key) {
             const newData = [...this.data]
