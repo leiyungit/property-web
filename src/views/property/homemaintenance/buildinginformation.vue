@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import { findBuildingByEstateCode } from '@/api/estate'
+
 const columns = [
     {
         title: '楼宇编码',
@@ -108,6 +110,11 @@ export default {
                 }
             }
         }
+    },
+    created() {
+        findBuildingByEstateCode('A').then(res => {
+            console.log(res)
+        })
     },
     methods: {
         callback(key) {

@@ -44,6 +44,7 @@ export default {
             this.$route.query.defaultKey = key
         },
         setHouseinformation(text) {
+            console.log(text)
             this.houseinformationText = text
         },
         setBuildinginformation(text) {

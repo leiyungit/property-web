@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { selectCell, updateCell } from '@/api/estate'
+import { selectCell, updateCell, updateBatchCell } from '@/api/estate'
 
 const columns = [
     {
@@ -170,8 +170,8 @@ export default {
             for (let index = 0; index < newData.length; index++) {
                 newData[index].id = newData[index].key
             }
-            updateCell(newData).then(res => {
-                if (res.result === 1) {
+            updateBatchCell(newData).then(res => {
+                if (res.result > 0) {
                     this.$notification.success({
                         message: '成功'
                         // description: '' // res.message

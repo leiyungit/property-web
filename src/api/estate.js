@@ -118,3 +118,12 @@ export function updateBatchCell(parameter) {
         }
     })
 }
+
+// 住宅维护
+export function findBuildingByEstateCode(parameter) {
+    return axios({
+        url: '/estate/findBuildingByEstateCode',
+        method: 'get',
+        date: QS.stringify(parameter)
+    })
+}

@@ -87,7 +87,7 @@ export default {
         seemqintain(text, record) {
             this.activeKey.defaultKey = '2'
             console.log(text, record)
-            this.$emit('set-houseinformation', record.estateName)
+            this.$emit('set-houseinformation', record.estateCode)
         }
     }
 }
