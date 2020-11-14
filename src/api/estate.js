@@ -151,11 +151,12 @@ export function updateBatchCell(parameter) {
     })
 }
 
-// 住宅维护
+// 住宅维护 data的方式必须写post
 export function findBuildingByEstateCode(parameter) {
+    console.log(QS.stringify(parameter))
     return axios({
         url: '/estate/findBuildingByEstateCode',
-        method: 'get',
+        method: 'post',
         data: QS.stringify(parameter)
     })
 }

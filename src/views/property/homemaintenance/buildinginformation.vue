@@ -112,7 +112,7 @@ export default {
         }
     },
     created() {
-        findBuildingByEstateCode('A').then(res => {
+        findBuildingByEstateCode({ estateCode: 'A' }).then(res => {
             console.log(res)
         })
     },
