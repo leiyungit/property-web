@@ -1,10 +1,12 @@
 const twoStep = {
     state: {
-        buildingCodeCount: ''
+        buildingCodeCount: '',
+        estateCode: ''
     },
     mutations: {
         SET_TITLE(state, payload) {
             state.buildingCodeCount = payload.buildingCodeCount
+            state.estateCode = payload.estateCode
         }
     },
     getters: {},

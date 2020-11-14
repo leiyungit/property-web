@@ -192,9 +192,10 @@ export default {
             console.log(res)
             // const list = QS.parse(res.result)
             const result = res.result
+            const mydata = []
             for (let i = 0; i < result.length; i++) {
                 var building = result[i]
-                data.push({
+                mydata.push({
                     key: building.id,
                     buildingCode: building.buildingCode,
                     buildingName: building.buildingName,
@@ -208,6 +209,7 @@ export default {
                     remark: building.remark
                 })
             }
+            this.data = mydata
             this.cacheData = data.map(item => ({ ...item }))
         }).catch(err => {
             setTimeout(this.$notification.error({
@@ -235,7 +237,8 @@ export default {
             }
             console.log(JSON.stringify(params))
             this.$store.commit('SET_TITLE', {
-                buildingCodeCount: JSON.stringify(params)
+                buildingCodeCount: JSON.stringify(params),
+                estateCode: this.$store.state.oneStep.estateCode
             })
              console.log(newData)
             updateBatchBuilding(newData)

@@ -16,7 +16,7 @@
       <a-table :columns="columns" :dataSource="data" bordered align="center">
         <template
           v-for="col in [
-            'buildingNumber',
+            'housecount',
             'housename',
             'unitcount',
             'cappeddate',
@@ -67,9 +67,9 @@ const columns = [
     {
         align: 'center',
         title: '楼宇编码',
-        dataIndex: 'buildingNumber',
+        dataIndex: 'housecount',
         width: '6%',
-        scopedSlots: { customRender: 'buildingNumber' }
+        scopedSlots: { customRender: 'housecount' }
     },
     {
         align: 'center',
@@ -147,7 +147,7 @@ const data = []
 for (let i = 0; i < 10; i++) {
     data.push({
         key: i.toString(),
-        buildingNumber: `B-${i + 1}`,
+        housecount: `B-${i + 1}`,
         housename: `第${i + 1}栋`,
         unitcount: `12`,
         cappeddate: moment().format('YYYY-MM-DD'),

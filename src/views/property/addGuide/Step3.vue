@@ -170,9 +170,10 @@ export default {
         // console.log(JSON.parse(param))
         selectUnit(param).then(res => {
             console.log(res)
+            const mydata = []
             for (let i = 0; i < res.result.length; i++) {
                 const m = res.result[i]
-                data.push({
+                mydata.push({
                     key: m.id,
                     buildingCode: m.buildingCode,
                     unitCode: m.unitCode,
@@ -184,6 +185,7 @@ export default {
                     remark: m.remark
                 })
             }
+            this.data = mydata
             this.cacheData = data.map(item => ({ ...item }))
         }).catch(err => {
             setTimeout(this.$notification.error({
@@ -209,7 +211,8 @@ export default {
                 params.push(param)
             }
             this.$store.commit('SET_TITLE', {
-                cellMessage: params
+                cellMessage: params,
+                estateCode: this.$store.state.threeStep.estateCode
             })
             console.log(newData)
             updateBatchUnit(newData).then(res => {

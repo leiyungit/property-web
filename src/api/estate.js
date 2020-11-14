@@ -26,6 +26,14 @@ export function findEstate() {
     })
 }
 
+export function selectEstateByCompany(parameter) {
+    return axios({
+        url: '/estate/selectEstateByCompany',
+        method: 'post',
+        data: QS.stringify(parameter)
+    })
+}
+
 export function selectBuilding(parameter) {
     return axios({
         url: '/estate/selectBuilding',
@@ -56,6 +64,22 @@ export function updateBatchBuilding(parameter) {
         // data: QS.stringify(parameter, {
         //     arrayFormat: 'repeat' // , allowDots: true
         // })
+    })
+}
+
+export function findSelectBuildingByEstateCode(parameter) {
+    return axios({
+        url: '/estate/findSelectBuildingByEstateCode',
+        method: 'post',
+        data: QS.stringify(parameter)
+    })
+}
+
+export function findUnitByBuildingCode(parameter) {
+    return axios({
+        url: '/estate/findUnitByBuildingCode',
+        method: 'post',
+        data: QS.stringify(parameter)
     })
 }
 
@@ -100,6 +124,14 @@ export function selectCell(parameter) {
     })
 }
 
+export function findCellByUnitCode(parameter) {
+    return axios({
+        url: '/estate/findCellByUnitCode',
+        method: 'post',
+        data: QS.stringify(parameter)
+    })
+}
+
 export function updateCell(parameter) {
     return axios({
         url: '/estate/updateCell',
@@ -124,6 +156,6 @@ export function findBuildingByEstateCode(parameter) {
     return axios({
         url: '/estate/findBuildingByEstateCode',
         method: 'get',
-        date: QS.stringify(parameter)
+        data: QS.stringify(parameter)
     })
 }
